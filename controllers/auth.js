@@ -4,19 +4,9 @@ const nodemailer = require('nodemailer');
 const User = require('../models/users');
 const passwordResetToken = require('../models/resettoken');
 var smtpTransport = require("nodemailer-smtp-transport");
-// var sgTransport = require('nodemailer-sendgrid-transport');
-
-// var options = {
-//   auth: {
-//       api_user: 'alexstani', // Sendgrid username
-//       api_key: '8870023970A' // Sendgrid password
-//   }
-
-// };
-// var client = nodemailer.createTransport(sgTransport(options));
 
 const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey('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')
+sgMail.setApiKey('')
 
 
 module.exports = {
@@ -85,8 +75,7 @@ module.exports = {
     passwordResetToken.find({ _userId: user._id, resettoken: { $ne: resettoken.resettoken } }).remove().exec();
     res.status(200).json({ message: 'Reset Password successfully.' });
     var email = {
-      // from: 'alex@technonix.co.in',
-      from : 'tix.firebase2@gmail.com',
+      from: '',
     to: user.email,
     subject: 'Node.js Password Reset',
     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
@@ -109,46 +98,6 @@ module.exports = {
     
     },
 
-// async ResetPassword(req, res) {
-//   let testAccount = await nodemailer.createTestAccount();
-//     if (!req.body.email) {
-//     return res
-//     .status(500)
-//     .json({ message: 'Email is required' });
-//     }
-//     const user = await User.findOne({
-//     email:req.body.email
-//     });
-//     if (!user) {
-//     return res
-//     .status(409)
-//     .json({ message: 'Email does not exist' });
-//     }
-//     var resettoken = new passwordResetToken({ _userId: user._id, resettoken: crypto.randomBytes(16).toString('hex') });
-//     resettoken.save(function (err) {
-//     if (err) { return res.status(500).send({ msg: err.message }); }
-    
-//     else{
-//       // Create e-mail object to send to user
-//       var email = {
-//           from: 'MEAN Stack Staff, staff@localhost.com',
-//           to: user.email,
-//           subject: 'Reset Password Request',
-//           text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-//           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-//           'http://localhost:4200/response-reset-password/' + resettoken.resettoken + '\n\n' +
-//           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-//       };
-//       // Function to send e-mail to the user
-//       client.sendMail(email, function(err, info) {
-//           if (err) 
-//               console.log(err); // If error with sending e-mail, log to console/terminal
-//       });
-//       res.json({ success: true, message: 'Please check your e-mail for password reset link' }); // Return success message
-//   }
-   
-//     })
-//     },
 
     async ValidPasswordToken(req, res) {
         if (!req.body.resettoken) {
